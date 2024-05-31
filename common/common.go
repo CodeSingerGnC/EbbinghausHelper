@@ -1,4 +1,4 @@
-package cmd
+package common
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 // 检查并获取基础文件夹（~/.ebhelp）路径
-func getBaseDir() (string, error) {
+func GetBaseDir() (string, error) {
 	// 获取当前用户的 Home 目录
 	homedir, err := go_homedir.Dir()
 	if err != nil {
@@ -33,7 +33,7 @@ func getBaseDir() (string, error) {
 }
 
 // 获得文件夹下所有 Json 文件的文件句柄
-func getJsonFile(dir string) ([]fs.DirEntry, error) {
+func GetJsonFiles(dir string) ([]fs.DirEntry, error) {
 	// 寻找 dir 下所有文件夹
 	files, err := os.ReadDir(dir)
 	if err != nil {

@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/olekukonko/tablewriter"
+
+	"github.com/CodeSingerGnC/EbbinghausHelper/common"
 )
 
 type FileDataMap struct {
@@ -74,7 +76,7 @@ func (m *FileDataMap) show() {
 	for filename, value := range m.Map {
 		data := make([][]string, len(value.Items))
 		for _, v := range value.Items {
-			if v.ThisTime.Before(time.Now()) {
+			if EqualDate(time.Now(), v.ThisTime) {
 				data = append(data, []string{v.Name, v.ThisTime.Format("2006-01-02"), v.Scheduled.Format("2006-01-02"), v.Website, fmt.Sprint(v.Times), v.Extra})
 			}
 		}
@@ -96,8 +98,8 @@ func (m *FileDataMap) getData() {
 		}
 	}
 
-	dir, _ := getBaseDir()
-	jsonFiles, err := getJsonFilePaths(dir)
+	dir, _ := common.GetBaseDir()
+	jsonFiles, err := common.GetJsonFiles(dir)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -130,7 +132,7 @@ func (m *FileDataMap) getData() {
 }
 
 func (m *FileDataMap) write(filename string, stream string) error {
-	baseDir, err := getBaseDir()
+	baseDir, err := common.GetBaseDir()
 	if err != nil {
 		return err
 	}
@@ -139,4 +141,11 @@ func (m *FileDataMap) write(filename string, stream string) error {
 	file.WriteString(stream)
 	file.Sync()
 	return nil
+}
+
+func EqualDate(t1, t2 time.Time) bool {
+	y1, m1, d1 := t1.Date()
+	y2, m2, d2 := t2.Date()
+
+	return y1 == y2 && m1 == m2 && d1 == d2
 }
